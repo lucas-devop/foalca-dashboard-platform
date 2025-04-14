@@ -1,0 +1,325 @@
+/* === GLOBAL === */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    color: rgb(34, 33, 33);
+    background: #f6f9f9;
+    font-family: 'Segoe UI', sans-serif;
+    display: flex;
+    justify-content: center;
+  }  
+  
+  /* === WRAPPER === */
+  .dashboard-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    padding: 3rem 2rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }  
+  
+  
+  /* === TITLES === */
+  h1 {
+    font-size: 32px;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 2rem;
+    max-width: 100%;
+    font-family: cursive;
+  }  
+  
+  /* === WALLET STATUS & BUTTONS === */
+  .wallet-actions {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .status-box {
+    display: inline-block;
+    background: #ffffff;
+    border: 2px solid #009688;
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    font-weight: 600;
+    color: #00695c;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 10px rgba(0, 150, 136, 0.1);
+  }
+  
+  /* === BUTTONS === */
+  .glow-btn {
+    padding: 12px 24px;
+    margin: 8px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background: #4caf50;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .glow-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px rgba(76, 175, 80, 0.6);
+  }
+  
+  .glow-btn.primary {
+    background: #1976d2;
+    box-shadow: 0 0 8px rgba(25, 118, 210, 0.4);
+  }
+  
+  .glow-btn.primary:hover {
+    box-shadow: 0 0 16px rgba(25, 118, 210, 0.6);
+  }
+  
+  .glow-btn.danger {
+    background: #e53935;
+    box-shadow: 0 0 8px rgba(229, 57, 53, 0.4);
+  }
+  
+  .glow-btn.danger:hover {
+    box-shadow: 0 0 16px rgba(229, 57, 53, 0.6);
+  }
+  
+  /* === SECTION WRAPPER === */
+  .dashboard-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    width: 100%;
+    max-width: 1200px;
+  }
+
+  
+  @media (min-width: 992px) {
+    .dashboard-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  
+  /* === ACCORDION SECTIONS === */
+  .extension-panel {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .extension-panel:hover {
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+  }
+  
+  .section-header {
+    font-weight: 600;
+    font-size: 18px;
+    color: #00695c;
+    background: #f1f1f1;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    transition: background 0.2s ease;
+  }
+  
+  .section-header:hover {
+    background: #e0f2f1;
+  }
+  
+  /* === FORM INPUTS === */
+  input, select, textarea {
+    font-family: inherit;
+    font-size: 15px;
+    padding: 0.6rem 0.9rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+    color: #333;
+    margin-top: 6px;
+    margin-bottom: 14px;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    border-color: #00695c;
+    box-shadow: 0 0 5px rgba(0, 105, 92, 0.2);
+  }
+  
+  /* === LABELS === */
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+  }
+  
+  /* === TABLES (for PoolOverview) === */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 15px;
+  }
+  
+  table th,
+  table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  
+  table th {
+    background-color: #e0f2f1;
+    color: #00695c;
+  }
+  
+  table td {
+    background-color: #fff;
+  }
+  
+  /* === UTILITIES === */
+  .center {
+    text-align: center;
+  }  
+
+  .dashboard-footer {
+    margin-top: 3rem;
+    padding: 1.5rem 1rem;
+    background: #111;
+    color: #ccc;
+    border-top: 1px solid #333;
+    text-align: center;
+    font-family: "Courier New", monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+    border-radius: 0 0 12px 12px;
+    min-width: 1200px;
+  }  
+
+  .glow-btn.primary {
+    background: #1e88e5;
+    border: none;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(30, 136, 229, 0.7);
+    transition: background 0.3s;
+  }
+  
+  .glow-btn.primary:hover {
+    background: #1565c0;
+  }
+
+
+  .approval-card {
+    display: flex;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    background-color: #fff;
+    border-left: 10px solid var(--accent-color, #ccc);
+  }
+  
+  .approval-content {
+    padding: 1rem;
+    flex: 1;
+  }
+  
+  .approval-header {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+  
+  .approval-data {
+    font-family: monospace;
+    background: #f1f1f1;
+    padding: 6px 10px;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    display: inline-block;
+  }
+  
+  .approval-status {
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .approval-votes {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333;
+    animation: pulse 1.6s ease-in-out infinite;
+    margin-top: 5px;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.02);
+      opacity: 0.85;
+      color: darkred;
+    }
+  }
+  
+  /* Barevné akcenty podle akce */
+  .action-burn { --accent-color: #e53935; }
+  .action-send { --accent-color: #fb8c00; }
+  .action-distribute { --accent-color: #8e24aa; }
+  .action-dynamic { --accent-color: #546e7a; }
+  .action-refill { --accent-color: #43a047; }
+  .action-fees { --accent-color: #1e88e5; }  
+
+
+  .pending-banner {
+    width: 100%;
+    background-color: rgba(255, 0, 0, 0.1);
+    color: #b71c1c;
+    text-align: center;
+    padding: 8px 0;
+    font-weight: bold;
+    animation: blink 1.5s infinite ease-in-out;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    font-size: 0.95rem;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  .section-header .badge {
+    background-color: #d32f2f;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    animation: pulseBadge 1.6s infinite ease-in-out;
+  }
+  
+  @keyframes pulseBadge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+  
