@@ -1,5 +1,5 @@
 export async function sendDiscordLog(content) {
-    console.log("📨 Sending webhook:", content); // ✅ log do browserové konzole
+    console.log("📨 Sending webhook:", content);
   
     try {
       const res = await fetch("/api/discord", {
@@ -11,7 +11,7 @@ export async function sendDiscordLog(content) {
       });
   
       const data = await res.json();
-      console.log("📬 Webhook response from API:", data); // ✅ log odpovědi z backendu
+      console.log("📬 Webhook response from API:", data);
   
     } catch (err) {
       console.error("❌ Frontend failed to reach API /api/discord:", err);
