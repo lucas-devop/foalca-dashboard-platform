@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
-import { sendDiscordLog } from "../utils/webhook";
+import { sendDiscordLogEmbed } from "../utils/webhook";
 
 
 export default function Approvals({ provider }) {
@@ -90,7 +90,17 @@ export default function Approvals({ provider }) {
       const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
       const tx = await contract.approveProposal(p.id);
       await tx.wait();
-      await sendDiscordLog(`✅ Proposal #${p.id} approved by ${account}\nAction: ${p.action}\nDetails: ${p.dataText}`);
+      
+      await sendDiscordLogEmbed({
+        title: `✅ Proposal #${p.id} Approved`,
+        description: p.dataText,
+        color: 0x2ecc71,
+        fields: [
+          { name: "Action", value: p.action, inline: true },
+          { name: "By", value: account, inline: true },
+        ],
+      });
+
       fetchProposals();
     } catch (err) {
       alert("❌ Approve failed: " + (err.reason || err.message));
@@ -104,7 +114,17 @@ export default function Approvals({ provider }) {
       const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
       const tx = await contract.rejectProposal(p.id);
       await tx.wait();
-      await sendDiscordLog(`⛔ Proposal #${p.id} rejected by ${account}\nAction: ${p.action}\nDetails: ${p.dataText}`);
+      
+      await sendDiscordLogEmbed({
+        title: `⛔ Proposal #${p.id} Rejected`,
+        description: p.dataText,
+        color: 0xe74c3c,
+        fields: [
+          { name: "Action", value: p.action, inline: true },
+          { name: "By", value: account, inline: true },
+        ],
+      });
+
       fetchProposals();
     } catch (err) {
       alert("❌ Reject failed: " + (err.reason || err.message));
@@ -118,7 +138,17 @@ export default function Approvals({ provider }) {
       const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
       const tx = await contract.executeProposal(p.id);
       await tx.wait();
-      await sendDiscordLog(`🚀 Proposal #${p.id} executed by ${account}\nAction: ${p.action}\nDetails: ${p.dataText}`);
+      
+      await sendDiscordLogEmbed({
+        title: `🚀 Proposal #${p.id} Executed`,
+        description: p.dataText,
+        color: 0x3498db,
+        fields: [
+          { name: "Action", value: p.action, inline: true },
+          { name: "By", value: account, inline: true },
+        ],
+      });  
+
       fetchProposals();
     } catch (err) {
       alert("❌ Execution failed: " + (err.reason || err.message));
