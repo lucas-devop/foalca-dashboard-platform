@@ -1,19 +1,23 @@
-export async function sendDiscordLog(content) {
-    console.log("📨 Sending webhook:", content);
-  
+export async function sendDiscordLogEmbed({ title, description, color, fields }) {
     try {
-      const res = await fetch("/api/discord", {
+      await fetch("/api/discord", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ content })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          embed: {
+            embeds: [
+              {
+                title,
+                description,
+                color,
+                fields,
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          },
+        }),
       });
-  
-      const data = await res.json();
-      console.log("📬 Webhook response from API:", data);
-  
     } catch (err) {
-      console.error("❌ Frontend failed to reach API /api/discord:", err);
+      console.error("❌ Failed to send Discord embed:", err);
     }
-  } 
+  }
