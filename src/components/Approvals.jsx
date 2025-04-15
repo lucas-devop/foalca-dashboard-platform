@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
+import { sendDiscordLog } from "../utils/webhook";
+
 
 export default function Approvals({ provider }) {
   const [proposals, setProposals] = useState([]);
@@ -82,41 +84,47 @@ export default function Approvals({ provider }) {
     }
   };
 
-  const approve = async (id) => {
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+  const approve = async (p) => {
     try {
-      const tx = await contract.approveProposal(id);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+      const tx = await contract.approveProposal(p.id);
       await tx.wait();
+      await sendDiscordLog(`✅ Proposal #${p.id} approved by ${account}\nAction: ${p.action}\nDetails: ${p.dataText}`);
       fetchProposals();
     } catch (err) {
       alert("❌ Approve failed: " + (err.reason || err.message));
     }
   };
+  
 
-  const reject = async (id) => {
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+  const reject = async (p) => {
     try {
-      const tx = await contract.rejectProposal(id);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+      const tx = await contract.rejectProposal(p.id);
       await tx.wait();
+      await sendDiscordLog(`⛔ Proposal #${p.id} rejected by ${account}\nAction: ${p.action}\nDetails: ${p.dataText}`);
       fetchProposals();
     } catch (err) {
       alert("❌ Reject failed: " + (err.reason || err.message));
     }
   };
+  
 
-  const execute = async (id) => {
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+  const execute = async (p) => {
     try {
-      const tx = await contract.executeProposal(id);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+      const tx = await contract.executeProposal(p.id);
       await tx.wait();
+      await sendDiscordLog(`🚀 Proposal #${p.id} executed by ${account}\nAction: ${p.action}\nDetails: ${p.dataText}`);
       fetchProposals();
     } catch (err) {
       alert("❌ Execution failed: " + (err.reason || err.message));
     }
   };
+  
 
   return (
     <div style={{ marginTop: "2rem" }}>
@@ -151,25 +159,15 @@ export default function Approvals({ provider }) {
                     <div style={{ marginTop: "0.75rem" }}>
                       {isApprover && !isOwner && (
                         <>
-                          <button onClick={() => approve(p.id)} className="btn-confirm">
-                            👍 Approve
-                          </button>
-                          <button
-                            onClick={() => reject(p.id)}
-                            className="btn-cancel"
-                            style={{ marginLeft: "0.5rem" }}
-                          >
-                            ⛔ Reject
-                          </button>
+                          <button onClick={() => approve(p)} className="btn-confirm" style={{ marginLeft: "0.5rem" }}> 👍 Approve </button>
+                          <button onClick={() => reject(p)} className="btn-cancel" style={{ marginLeft: "0.5rem" }}> ⛔ Reject </button>
                         </>
                       )}
                       {isOwner && (
                         <>
-                          <button onClick={() => execute(p.id)} className="btn-confirm">
-                            🚀 Execute
-                          </button>
+                          <button onClick={() => execute(p)} className="btn-confirm"> 🚀 Execute </button>
                           <button
-                            onClick={() => reject(p.id)}
+                            onClick={() => reject(p)}
                             className="btn-cancel"
                             style={{ marginLeft: "0.5rem" }}
                           >
