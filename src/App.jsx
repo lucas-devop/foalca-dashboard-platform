@@ -167,7 +167,7 @@ export default function App() {
             ) : (
               <>
                 <div className="status-box">✅ Connected: {address}</div>
-                <button onClick={disconnectWallet} className="glow-btn danger">❌ Disconnect</button>
+                <button onClick={disconnectWallet} className="glow-btn danger">✖️ Disconnect</button>
               </>
             )}
           </div>
