@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
 export default function BurnScheduler({ provider }) {
   const [lastBurn, setLastBurn] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     async function fetchBurnTime() {
-      if (!provider) return;
       try {
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
         const timestamp = await contract.lastBurnTime();
         setLastBurn(new Date(Number(timestamp) * 1000));
       } catch (err) {
@@ -20,7 +20,7 @@ export default function BurnScheduler({ provider }) {
     }
 
     fetchBurnTime();
-  }, [provider]);
+  }, []);
 
   async function proposeBurn() {
     if (!provider) return;
