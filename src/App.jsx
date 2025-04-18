@@ -76,22 +76,22 @@ export default function App() {
   }, [provider, isApprover, owner, address]);
 
   const fetchPendingProposals = async () => {
-    try {
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
-      const count = await contract.proposalCounter();
+  try {
+    const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
+    const count = await contract.proposalCounter();
 
-      let pending = 0;
-      for (let i = 0; i < count; i++) {
-        const [, , executed, rejected] = await contract.getProposal(i);
-        if (!executed && !rejected) pending++;
-      }
-
-      setPendingCount(pending);
-    } catch (err) {
-      console.error("Error fetching pending proposals:", err);
+    let pending = 0;
+    for (let i = 0; i < count; i++) {
+      const [, , executed, rejected] = await contract.getProposal(i);
+      if (!executed && !rejected) pending++;
     }
-  };
+
+    setPendingCount(pending);
+  } catch (err) {
+    console.error("Error fetching pending proposals:", err);
+  }
+};
 
   const validateAccess = async (provider, account) => {
     setCheckingAccess(true);
