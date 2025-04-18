@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
 export default function DistributeDevFunds({ provider }) {
   const [loading, setLoading] = useState(false);
   const [lastDistribution, setLastDistribution] = useState(null);
 
   useEffect(() => {
     async function fetchLastDistribution() {
-      if (!provider) return;
       try {
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
         const timestamp = await contract.lastDevDistribution();
         setLastDistribution(new Date(Number(timestamp) * 1000));
       } catch (err) {
@@ -20,7 +20,7 @@ export default function DistributeDevFunds({ provider }) {
     }
 
     fetchLastDistribution();
-  }, [provider]);
+  }, []);
 
   const proposeDistribution = async () => {
     if (!provider) return alert("❌ Wallet not connected.");
