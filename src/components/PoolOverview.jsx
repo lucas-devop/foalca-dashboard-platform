@@ -12,37 +12,35 @@ const poolNames = [
   "reserve",
 ];
 
-export default function PoolOverview({ provider }) {
+export default function PoolOverview() {
   const [balances, setBalances] = useState({});
 
   useEffect(() => {
-    if (!provider) return;
-  
     let interval;
-  
+    const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
     const fetchData = async () => {
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-  
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, readOnlyProvider);
+
       const results = {};
       for (const name of poolNames) {
         try {
           const raw = await contract.pools(name);
           results[name] = ethers.formatUnits(raw, 18);
         } catch (err) {
+          console.error(`Error fetching pool ${name}:`, err);
           results[name] = "Error";
         }
       }
-  
+
       setBalances(results);
     };
-  
+
     fetchData();
-  
     interval = setInterval(fetchData, 5000);
-  
+
     return () => clearInterval(interval);
-  }, [provider]);
+  }, []);
 
   return (
     <div>
