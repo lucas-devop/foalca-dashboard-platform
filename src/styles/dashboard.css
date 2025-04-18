@@ -39,10 +39,6 @@ html, body {
     margin-bottom: 2rem;
   }
 
-
-  html, body {
-    height: 100%;
-  }
   
   .wallet-modal {
     position: fixed;
