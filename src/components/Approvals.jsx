@@ -15,74 +15,77 @@ export default function Approvals({ provider }) {
     fetchProposals();
   }, [provider]);
 
-  const fetchProposals = async () => {
-    try {
-      const signer = await provider.getSigner();
-      const user = await signer.getAddress();
-      setAccount(user);
+  const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
 
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
-      const count = await contract.proposalCounter();
-      const list = [];
+const fetchProposals = async () => {
+  try {
+    const signer = await provider.getSigner();
+    const user = await signer.getAddress();
+    setAccount(user);
 
-      const ownerAddress = await contract.owner();
-      const approverStatus = await contract.isApprover(user);
-      setIsOwner(user.toLowerCase() === ownerAddress.toLowerCase());
-      setIsApprover(approverStatus);
+    const readContract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
+    const count = await readContract.proposalCounter();
+    const list = [];
 
-      for (let i = 0; i < count; i++) {
-        const [action, proposer, executed, rejected, approvals] = await contract.getProposal(i);
-        const data = await contract.getProposalData(i);
+    const ownerAddress = await readContract.owner();
+    const approverStatus = await readContract.isApprover(user);
+    setIsOwner(user.toLowerCase() === ownerAddress.toLowerCase());
+    setIsApprover(approverStatus);
 
-        let dataText = "N/A";
+    for (let i = 0; i < count; i++) {
+      const [action, proposer, executed, rejected, approvals] = await readContract.getProposal(i);
+      const data = await readContract.getProposalData(i);
 
-        if (action === "scheduledBurn") {
-          dataText = "Burning 1,000,000,000 FOALCA";
-        } else if (action === "sendFromPool") {
-          const decoded = ethers.AbiCoder.defaultAbiCoder().decode(
-            ["string", "address", "uint256"],
-            data
-          );
-          const pool = decoded[0];
-          const recipient = decoded[1];
-          const amount = ethers.formatUnits(decoded[2], 18);
-          dataText = `${pool} → ${amount} FOALCA → ${recipient}`;
-        } else if (action === "distributeFromDevelopment") {
-          dataText = "Distribute 1,000,000,000 FOALCA from development → marketing, liquidity, rewards, reserve";
-        } else if (action === "setUseDynamicFees") {
-          const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["bool"], data);
-          const enabled = decoded[0];
-          dataText = enabled ? "Enable dynamic fees" : "Disable dynamic fees";
-        } else if (action === "refillPoolFromReserve") {
-          const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["string", "uint256"], data);
-          const targetPool = decoded[0];
-          const amount = ethers.formatUnits(decoded[1], 18);
-          dataText = `Refill '${targetPool}' with ${amount} FOALCA from reserve`;
-        } else if (action === "setFees") {
-          const decoded = ethers.AbiCoder.defaultAbiCoder().decode(
-            ["uint256", "uint256", "uint256", "uint256", "uint256"],
-            data
-          );
-          const totalFee = decoded.reduce((sum, val) => sum + Number(val), 0) / 10;
-          dataText = `Set total fee to ${totalFee}% → Burn: ${decoded[0]}‰, Rewards: ${decoded[1]}‰, Liquidity: ${decoded[2]}‰, Marketing: ${decoded[3]}‰, Development: ${decoded[4]}‰`;
-        }
+      let dataText = "N/A";
 
-        list.push({
-          id: i,
-          action,
-          proposer,
-          executed,
-          rejected,
-          approvals: Number(approvals),
-          dataText
-        });
+      if (action === "scheduledBurn") {
+        dataText = "Burning 1,000,000,000 FOALCA";
+      } else if (action === "sendFromPool") {
+        const decoded = ethers.AbiCoder.defaultAbiCoder().decode(
+          ["string", "address", "uint256"],
+          data
+        );
+        const pool = decoded[0];
+        const recipient = decoded[1];
+        const amount = ethers.formatUnits(decoded[2], 18);
+        dataText = `${pool} → ${amount} FOALCA → ${recipient}`;
+      } else if (action === "distributeFromDevelopment") {
+        dataText = "Distribute 1,000,000,000 FOALCA from development → marketing, liquidity, rewards, reserve";
+      } else if (action === "setUseDynamicFees") {
+        const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["bool"], data);
+        const enabled = decoded[0];
+        dataText = enabled ? "Enable dynamic fees" : "Disable dynamic fees";
+      } else if (action === "refillPoolFromReserve") {
+        const decoded = ethers.AbiCoder.defaultAbiCoder().decode(["string", "uint256"], data);
+        const targetPool = decoded[0];
+        const amount = ethers.formatUnits(decoded[1], 18);
+        dataText = `Refill '${targetPool}' with ${amount} FOALCA from reserve`;
+      } else if (action === "setFees") {
+        const decoded = ethers.AbiCoder.defaultAbiCoder().decode(
+          ["uint256", "uint256", "uint256", "uint256", "uint256"],
+          data
+        );
+        const totalFee = decoded.reduce((sum, val) => sum + Number(val), 0) / 10;
+        dataText = `Set total fee to ${totalFee}% → Burn: ${decoded[0]}‰, Rewards: ${decoded[1]}‰, Liquidity: ${decoded[2]}‰, Marketing: ${decoded[3]}‰, Development: ${decoded[4]}‰`;
       }
 
-      setProposals(list);
-    } catch (err) {
-      console.error("Failed to fetch proposals:", err);
+      list.push({
+        id: i,
+        action,
+        proposer,
+        executed,
+        rejected,
+        approvals: Number(approvals),
+        dataText
+      });
     }
-  };
+
+    setProposals(list);
+  } catch (err) {
+    console.error("Failed to fetch proposals:", err);
+  }
+};
+
 
   const approve = async (p) => {
     try {
