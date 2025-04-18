@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import WalletConnectProvider from "@walletconnect/web3-provider/dist/umd/index.min.js";
 import PoolOverview from "./components/PoolOverview";
 import BurnScheduler from "./components/BurnScheduler";
 import DynamicFeesToggle from "./components/DynamicFeesToggle";
@@ -31,12 +32,15 @@ const allSections = [
 
 export default function App() {
   const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
+  const [contract, setContract] = useState(null);
   const [address, setAddress] = useState(null);
   const [owner, setOwner] = useState(null);
   const [isApprover, setIsApprover] = useState(false);
   const [openSection, setOpenSection] = useState("overview");
   const [accessDenied, setAccessDenied] = useState(false);
   const [pendingCount, setPendingCount] = useState(0);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -98,6 +102,8 @@ export default function App() {
 
       if (account.toLowerCase() === ownerAddress.toLowerCase() || isApproved) {
         setProvider(provider);
+        setSigner(signer);
+        setContract(contract);
         setAddress(account);
         setOwner(ownerAddress.toLowerCase());
         setIsApprover(isApproved);
@@ -119,15 +125,76 @@ export default function App() {
     }
   };
 
-  async function connectWallet() {
-    if (!window.ethereum) return alert("MetaMask not found.");
-    const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-    validateAccess(new ethers.BrowserProvider(window.ethereum), accounts[0]);
-  }
-
-  function disconnectWallet() {
+  const disconnectWallet = () => {
+    setProvider(null);
+    setSigner(null);
+    setContract(null);
     setAddress(null);
     setAccessDenied(false);
+  };
+
+  async function connectWallet(wallet) {
+    if (!window.ethereum) return alert("No Ethereum provider found.");
+
+    let providerToUse = null;
+
+    if (window.ethereum.providers?.length) {
+      for (const p of window.ethereum.providers) {
+        if (wallet === 'metamask' && p.isMetaMask) providerToUse = p;
+        if (wallet === 'coinbase' && p.isCoinbaseWallet) providerToUse = p;
+        if (wallet === 'trust' && p.isTrust) providerToUse = p;
+      }
+    } else {
+      providerToUse = window.ethereum;
+    }
+
+    if (!providerToUse) {
+      alert(`Selected wallet (${wallet}) not found!`);
+      return;
+    }
+
+    try {
+      const ethersProvider = new ethers.BrowserProvider(providerToUse);
+      const signer = await ethersProvider.getSigner();
+      const walletAddress = await signer.getAddress();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+
+      setProvider(ethersProvider);
+      setSigner(signer);
+      setContract(contract);
+      setAddress(walletAddress);
+      validateAccess(ethersProvider, walletAddress);
+      setIsWalletModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert(`Failed to connect to ${wallet}.`);
+    }
+  }
+
+  async function connectWalletConnect() {
+    try {
+      const wcProvider = new WalletConnectProvider({
+        rpc: {
+          56: "https://bsc-dataseed.binance.org/"
+        }
+      });
+
+      await wcProvider.enable();
+      const ethersProvider = new ethers.BrowserProvider(wcProvider);
+      const signer = await ethersProvider.getSigner();
+      const walletAddress = await signer.getAddress();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+
+      setProvider(ethersProvider);
+      setSigner(signer);
+      setContract(contract);
+      setAddress(walletAddress);
+      validateAccess(ethersProvider, walletAddress);
+      setIsWalletModalOpen(false);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to connect via WalletConnect.");
+    }
   }
 
   const visibleSections = allSections.filter(
@@ -149,7 +216,7 @@ export default function App() {
 
       <div className="wallet-actions">
         {!address ? (
-          <button onClick={connectWallet} className="glow-btn primary">🔗 Connect Wallet</button>
+          <button onClick={() => setIsWalletModalOpen(true)} className="glow-btn primary">🔗 Connect Wallet</button>
         ) : (
           <>
             <div className="status-box">✅ Connected: {address}</div>
@@ -157,6 +224,33 @@ export default function App() {
           </>
         )}
       </div>
+
+      {isWalletModalOpen && (
+        <div className="wallet-modal">
+          <div className="wallet-modal-content">
+            <h2>Connect Wallet</h2>
+            <div className="wallet-options">
+              <div className="wallet-option" onClick={() => connectWallet('metamask')}>
+                <img src="/metamask-icon.png" alt="MetaMask" />
+                <span>MetaMask</span>
+              </div>
+              <div className="wallet-option" onClick={() => connectWallet('coinbase')}>
+                <img src="/coinbase-icon.png" alt="Coinbase Wallet" />
+                <span>Coinbase Wallet</span>
+              </div>
+              <div className="wallet-option" onClick={() => connectWallet('trust')}>
+                <img src="/trustwallet-icon.png" alt="Trust Wallet" />
+                <span>Trust Wallet</span>
+              </div>
+              <div className="wallet-option" onClick={connectWalletConnect}>
+                <img src="/walletconnect-icon.png" alt="WalletConnect" />
+                <span>WalletConnect (QR)</span>
+              </div>
+              <button className="glow-btn danger" style={{ marginTop: "15px" }} onClick={() => setIsWalletModalOpen(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {accessDenied && (
         <div className="status-box" style={{ marginTop: "1rem", color: "red" }}>
@@ -188,7 +282,6 @@ export default function App() {
               </div>
             ))}
           </div>
-
           <Footer provider={provider} />
         </>
       )}
