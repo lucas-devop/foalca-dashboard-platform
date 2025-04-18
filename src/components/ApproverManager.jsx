@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
 export default function ApproverManager({ provider }) {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [owner, setOwner] = useState(null);
@@ -18,10 +20,11 @@ export default function ApproverManager({ provider }) {
     try {
       const signer = await provider.getSigner();
       const user = await signer.getAddress();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
-
-      const ownerAddress = await contract.owner();
       setCurrentAccount(user);
+
+      const readContract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
+
+      const ownerAddress = await readContract.owner();
       setOwner(ownerAddress);
 
       const known = localStorage.getItem("knownApprovers");
@@ -29,7 +32,7 @@ export default function ApproverManager({ provider }) {
       const result = [];
 
       for (const address of stored) {
-        const isValid = await contract.isApprover(address);
+        const isValid = await readContract.isApprover(address);
         if (isValid) result.push(address);
       }
 
