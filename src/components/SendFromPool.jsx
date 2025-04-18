@@ -12,6 +12,8 @@ const poolOptions = [
   "reserve",
 ];
 
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
 export default function SendFromPool({ provider }) {
   const [poolName, setPoolName] = useState("community");
   const [recipient, setRecipient] = useState("");
@@ -26,29 +28,31 @@ export default function SendFromPool({ provider }) {
     try {
       setLoading(true);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
-  
+      const writeContract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+      const readContract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
+
       const parsedAmount = ethers.parseUnits(amount, 18);
-  
-      const poolBalance = await contract.pools(poolName);
+
+      const poolBalance = await readContract.pools(poolName);
       if (parsedAmount > poolBalance) {
         alert(`❌ Not enough tokens in "${poolName}" pool.`);
         setLoading(false);
         return;
       }
-  
+
       const encoded = ethers.AbiCoder.defaultAbiCoder().encode(
         ["string", "address", "uint256"],
         [poolName, recipient, parsedAmount]
       );
-  
-      const tx = await contract.createProposal("sendFromPool", encoded);
+
+      const tx = await writeContract.createProposal("sendFromPool", encoded);
       await tx.wait();
-  
+
       alert(`📤 Proposal to send ${amount} FOALCA from '${poolName}' to ${recipient} submitted.`);
       setAmount("");
       setRecipient("");
     } catch (err) {
+      console.error("Error creating proposal:", err);
       alert("❌ Proposal creation failed: " + (err.reason || err.message));
     } finally {
       setLoading(false);
