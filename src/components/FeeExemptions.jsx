@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
 export default function FeeExemptions({ provider }) {
   const [addressInput, setAddressInput] = useState("");
   const [exemptList, setExemptList] = useState([]);
@@ -21,9 +23,7 @@ export default function FeeExemptions({ provider }) {
   };
 
   const fetchExemptions = async () => {
-    if (!provider) return;
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+    const readContract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
 
     const stored = getStoredAddresses().map((addr) => ({ address: addr, label: null }));
     const allCandidates = [...presetAddresses, ...stored];
@@ -34,7 +34,7 @@ export default function FeeExemptions({ provider }) {
       const label = typeof candidate === "string" ? null : candidate.label;
 
       try {
-        const isExempt = await contract.isExcludedFromFees(address);
+        const isExempt = await readContract.isExcludedFromFees(address);
         if (isExempt && !results.some((item) => item.address === address)) {
           results.push({ address, label });
         }
