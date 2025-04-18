@@ -163,7 +163,7 @@ export default function App() {
 
           <div className="wallet-actions">
             {!address ? (
-              <button onClick={connectWallet} className="glow-btn primary">\ud83d\udd17 Connect Wallet</button>
+              <button onClick={connectWallet} className="glow-btn primary">🔗 Connect Wallet</button>
             ) : (
               <>
                 <div className="status-box">\u2705 Connected: {address}</div>
