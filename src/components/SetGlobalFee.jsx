@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
 const options = [7, 8, 9, 10, 11, 12, 13, 14, 15];
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
 
 export default function SetGlobalFee({ provider }) {
   const [loading, setLoading] = useState(false);
@@ -10,14 +11,12 @@ export default function SetGlobalFee({ provider }) {
   const [proportions, setProportions] = useState(null);
 
   useEffect(() => {
-    if (!provider) return;
     fetchProportions();
-  }, [provider]);
+  }, []);
 
   const fetchProportions = async () => {
     try {
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
       const feeInfo = await contract.getFullFeeInfo();
 
       const total =
