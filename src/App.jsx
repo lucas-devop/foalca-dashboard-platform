@@ -16,16 +16,16 @@ import logo from "./assets/logo.png";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "./config/contract";
 
 const allSections = [
-  { id: "overview", title: "\ud83d\udcca Pool Overview", component: PoolOverview },
-  { id: "burn", title: "\ud83d\udd25 Burn Scheduler", component: BurnScheduler },
-  { id: "dynamic", title: "\u2696\ufe0f Dynamic Fees", component: DynamicFeesToggle },
-  { id: "send", title: "\ud83d\udce4 Send From Pool", component: SendFromPool },
-  { id: "refill", title: "\ud83d\udd01 Refill Pool", component: RefillPool },
-  { id: "fees", title: "\ud83d\udcb8 Set Global Fee", component: SetGlobalFee },
-  { id: "devfunds", title: "\ud83d\ude80 Distribute Development Funds", component: DistributeDevFunds },
-  { id: "approvals", title: "\ud83d\udcdc Approvals", component: Approvals },
-  { id: "exemptions", title: "\ud83d\udee1\ufe0f Fee Exemptions", component: FeeExemptions, ownerOnly: true },
-  { id: "approvers", title: "\ud83d\udd10 Manage Approvers", component: ApproverManager, ownerOnly: true },
+  { id: "overview", title: "📊 Pool Overview", component: PoolOverview },
+  { id: "burn", title: "🔥 Burn Scheduler", component: BurnScheduler },
+  { id: "dynamic", title: "⚖️ Dynamic Fees", component: DynamicFeesToggle },
+  { id: "send", title: "📤 Send From Pool", component: SendFromPool },
+  { id: "refill", title: "💳 Refill Pool", component: RefillPool },
+  { id: "fees", title: "💸 Set Global Fee", component: SetGlobalFee },
+  { id: "devfunds", title: "🚀 Distribute Development Funds", component: DistributeDevFunds },
+  { id: "approvals", title: "📜 Approvals", component: Approvals },
+  { id: "exemptions", title: "🛡️ Fee Exemptions", ownerOnly: true, component: FeeExemptions },
+  { id: "approvers", title: "🔐 Manage Approvers", ownerOnly: true, component: ApproverManager },
 ];
 
 export default function App() {
@@ -145,12 +145,12 @@ export default function App() {
   return (
     <div className="dashboard-wrapper">
       {checkingAccess && (
-        <div className="status-box loading">\u23f3 Checking access, please wait...</div>
+        <div className="status-box loading">⏳ Checking access, please wait...</div>
       )}
 
       {!checkingAccess && pendingCount > 0 && (isApprover || address?.toLowerCase() === owner) && (
         <div className="pending-banner">
-          \ud83d\udea8 {pendingCount} proposal{pendingCount !== 1 ? "s" : ""} awaiting approval!
+          🚨 {pendingCount} proposal{pendingCount !== 1 ? "s" : ""} awaiting approval!
         </div>
       )}
 
@@ -166,15 +166,15 @@ export default function App() {
               <button onClick={connectWallet} className="glow-btn primary">🔗 Connect Wallet</button>
             ) : (
               <>
-                <div className="status-box">\u2705 Connected: {address}</div>
-                <button onClick={disconnectWallet} className="glow-btn danger">\u274c Disconnect</button>
+                <div className="status-box">✅ Connected: {address}</div>
+                <button onClick={disconnectWallet} className="glow-btn danger">❌ Disconnect</button>
               </>
             )}
           </div>
 
           {accessDenied && (
             <div className="status-box" style={{ marginTop: "1rem", color: "red" }}>
-              \u26d4 Access denied: Only team can access the dashboard. Redirecting...
+              ⛔ Access denied: Only team can access the dashboard. Redirecting...
             </div>
           )}
 
@@ -192,7 +192,7 @@ export default function App() {
                       {id === "approvals" && pendingCount > 0 && (
                         <span className="badge">{pendingCount}</span>
                       )}
-                      {openSection === id ? " \u25b2" : " \u25bc"}
+                      {openSection === id ? " ▲" : " ▼"}
                     </div>
                     {openSection === id && (
                       <div className="section-content">
