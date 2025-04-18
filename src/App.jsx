@@ -93,36 +93,36 @@ export default function App() {
   };
 
   const validateAccess = async (provider, account) => {
-    try {
-      const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
-      const ownerAddress = await contract.owner();
-      const isApproved = await contract.isApprover(account);
+  try {
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+    const ownerAddress = await contract.owner();
+    const isApproved = await contract.isApprover(account.toLowerCase());
 
-      if (account.toLowerCase() === ownerAddress.toLowerCase() || isApproved) {
-        setProvider(provider);
-        setSigner(signer);
-        setContract(contract);
-        setAddress(account);
-        setOwner(ownerAddress.toLowerCase());
-        setIsApprover(isApproved);
-        setAccessDenied(false);
-      } else {
-        setAddress(null);
-        setAccessDenied(true);
-        setTimeout(() => {
-          window.location.href = "https://forallcases.com";
-        }, 2500);
-      }
-    } catch (err) {
-      console.error("Access validation failed:", err);
+    if (account.toLowerCase() === ownerAddress.toLowerCase() || isApproved) {
+      setProvider(provider);
+      setSigner(signer);
+      setContract(contract);
+      setAddress(account);
+      setOwner(ownerAddress.toLowerCase());
+      setIsApprover(isApproved);
+      setAccessDenied(false);
+    } else {
       setAddress(null);
       setAccessDenied(true);
       setTimeout(() => {
         window.location.href = "https://forallcases.com";
       }, 2500);
     }
-  };
+  } catch (err) {
+    console.error("Access validation failed:", err);
+    setAddress(null);
+    setAccessDenied(true);
+    setTimeout(() => {
+      window.location.href = "https://forallcases.com";
+    }, 2500);
+  }
+};
 
   const disconnectWallet = () => {
     setProvider(null);
