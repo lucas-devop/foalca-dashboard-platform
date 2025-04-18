@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0xEF227db3D4a509a4106Bbcee6505e13977F771B3";
+export const CONTRACT_ADDRESS = "0xa7Bf44e94F05eD957D03DAB2Eb191b7872d81Bfb";
 
 export const ABI = [
   "function pools(string) view returns (uint256)",

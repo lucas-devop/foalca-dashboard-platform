@@ -20,4 +20,4 @@ export async function sendDiscordLogEmbed({ title, description, color, fields })
     } catch (err) {
       console.error("❌ Failed to send Discord embed:", err);
     }
-  }  
+  }
