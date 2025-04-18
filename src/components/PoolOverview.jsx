@@ -26,7 +26,7 @@ export default function PoolOverview() {
       for (const name of poolNames) {
         try {
           const raw = await contract.pools(name);
-          results[name] = ethers.formatUnits(raw, 18);
+          results[name] = Number(ethers.formatUnits(raw, 18)).toFixed(4);
         } catch (err) {
           console.error(`Error fetching pool ${name}:`, err);
           results[name] = "Error";
