@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
 export default function DynamicFeesToggle({ provider }) {
   const [useDynamic, setUseDynamic] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!provider) return;
-
     const fetchStatus = async () => {
       try {
-        const signer = await provider.getSigner();
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
+        const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
         const current = await contract.getUseDynamicFees();
         setUseDynamic(current);
       } catch (err) {
@@ -21,7 +20,7 @@ export default function DynamicFeesToggle({ provider }) {
     };
 
     fetchStatus();
-  }, [provider]);
+  }, []);
 
   const proposeToggle = async () => {
     if (!provider) return alert("❌ Wallet not connected.");
