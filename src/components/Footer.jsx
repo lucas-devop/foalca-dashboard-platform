@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
+const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+
 export default function Footer({ provider }) {
   const [owner, setOwner] = useState(null);
   const [currentAccount, setCurrentAccount] = useState(null);
@@ -17,11 +19,12 @@ export default function Footer({ provider }) {
   const fetchData = async () => {
     try {
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, signer);
-      const ownerAddress = await contract.owner();
       const user = await signer.getAddress();
-      setOwner(ownerAddress);
       setCurrentAccount(user);
+
+      const readContract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
+      const ownerAddress = await readContract.owner();
+      setOwner(ownerAddress);
     } catch (err) {
       console.error("Failed to fetch owner:", err.message);
     }
