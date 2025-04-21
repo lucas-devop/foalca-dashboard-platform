@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
-const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+const readOnlyProvider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 
 export default function ApproverManager({ provider }) {
   const [currentAccount, setCurrentAccount] = useState(null);
