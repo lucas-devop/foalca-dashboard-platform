@@ -15,7 +15,7 @@ export default function Approvals({ provider }) {
     fetchProposals();
   }, [provider]);
 
-  const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+  const readOnlyProvider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 
 const fetchProposals = async () => {
   try {
