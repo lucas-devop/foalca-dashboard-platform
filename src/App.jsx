@@ -77,7 +77,7 @@ export default function App() {
 
   const fetchPendingProposals = async () => {
   try {
-    const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+    const readOnlyProvider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
     const contract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
     const count = await contract.proposalCounter();
 
@@ -96,7 +96,7 @@ export default function App() {
   const validateAccess = async (provider, account) => {
     setCheckingAccess(true);
     try {
-      const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+      const readOnlyProvider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
       const readOnlyContract = new ethers.Contract(CONTRACT_ADDRESS, FOALCA_ABI, readOnlyProvider);
 
       const ownerAddress = await readOnlyContract.owner();
