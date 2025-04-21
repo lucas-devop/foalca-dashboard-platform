@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
 
 const options = [7, 8, 9, 10, 11, 12, 13, 14, 15];
-const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+const readOnlyProvider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 
 export default function SetGlobalFee({ provider }) {
   const [loading, setLoading] = useState(false);
