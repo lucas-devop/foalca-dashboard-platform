@@ -17,7 +17,7 @@ export default function PoolOverview() {
 
   useEffect(() => {
     let interval;
-    const readOnlyProvider = new ethers.JsonRpcProvider("https://data-seed-prebsc-1-s1.binance.org:8545/");
+    const readOnlyProvider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/");
 
     const fetchData = async () => {
       const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, readOnlyProvider);
