@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { CONTRACT_ADDRESS, ABI as FOALCA_ABI } from "../config/contract";
-import { sendDiscordLogEmbed } from "../utils/webhook";
 
 
 export default function Approvals({ provider }) {
