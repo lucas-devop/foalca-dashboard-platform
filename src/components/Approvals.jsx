@@ -93,15 +93,6 @@ const fetchProposals = async () => {
       const tx = await contract.approveProposal(p.id);
       await tx.wait();
       
-      await sendDiscordLogEmbed({
-        title: `✅ Proposal #${p.id} Approved`,
-        description: p.dataText,
-        color: 0x2ecc71,
-        fields: [
-          { name: "Action", value: p.action, inline: true },
-          { name: "By", value: account, inline: true },
-        ],
-      });
 
       fetchProposals();
     } catch (err) {
@@ -117,15 +108,6 @@ const fetchProposals = async () => {
       const tx = await contract.rejectProposal(p.id);
       await tx.wait();
       
-      await sendDiscordLogEmbed({
-        title: `⛔ Proposal #${p.id} Rejected`,
-        description: p.dataText,
-        color: 0xe74c3c,
-        fields: [
-          { name: "Action", value: p.action, inline: true },
-          { name: "By", value: account, inline: true },
-        ],
-      });
 
       fetchProposals();
     } catch (err) {
@@ -141,15 +123,6 @@ const fetchProposals = async () => {
       const tx = await contract.executeProposal(p.id);
       await tx.wait();
       
-      await sendDiscordLogEmbed({
-        title: `🚀 Proposal #${p.id} Executed`,
-        description: p.dataText,
-        color: 0x3498db,
-        fields: [
-          { name: "Action", value: p.action, inline: true },
-          { name: "By", value: account, inline: true },
-        ],
-      });  
 
       fetchProposals();
     } catch (err) {
