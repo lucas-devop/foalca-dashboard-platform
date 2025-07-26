@@ -21,6 +21,141 @@ html, body {
     flex-direction: column;
     align-items: center;
   }  
+
+
+
+.unauth-wrapper {
+  width: 100%;
+  max-width: 960px;
+  padding: 2rem;
+  text-align: center;
+  animation: fadeSlideIn 1.2s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.unauth-content {
+  background: #f1f1f1;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+  transition: all 0.4s ease;
+}
+
+.unauth-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+}
+
+.unauth-paragraph {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 1.25rem;
+  line-height: 1.9;
+}
+
+.unauth-paragraph.highlight {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #2a2a2a;
+}
+
+.unauth-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.5rem;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.unauth-list li {
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+
+.unauth-footer {
+  margin-top: 2rem;
+  padding: 1.25rem 0 0.5rem 0;
+  font-size: 0.95rem;
+  color: #ccc;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  background: #111;
+  font-family: Courier New,monospace;
+  border-radius: 0 0 12px 12px;
+  padding-bottom: 30px;
+  padding-top: 30px;
+}
+
+
+.wallet-info-box {
+  margin-top: 3rem;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f0f4ff, #e8f5e9);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  animation: fadeSlideIn 1.4s ease forwards;
+}
+
+.wallet-info-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+}
+
+.wallet-info-subtitle {
+  font-size: 1.15rem;
+  color: #444;
+  margin-bottom: 1.75rem;
+}
+
+.wallet-icons {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.wallet-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.wallet-icon img {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.wallet-icon:hover img {
+  transform: scale(1.1);
+}
+
+
   
   
   /* === TITLES === */
