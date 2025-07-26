@@ -178,6 +178,53 @@ export default function App() {
             </div>
           )}
 
+          
+
+             {!address && !accessDenied && (
+  <div className="unauth-wrapper">
+  <div className="unauth-content">
+  <h2 className="unauth-title">Welcome to the FOALCA Admin Dashboard</h2>
+  <p className="unauth-paragraph highlight">
+    This platform is a semi-centralized governance voting model for the <strong>FOALCA Tokens</strong>, providing the approvers tools to manage essential operations such as:
+  </p>
+  <ul className="unauth-list">
+    <li>🔥 <strong>Scheduled Burns</strong> – keep the supply under control</li>
+    <li>💸 <strong>Fee Configuration</strong> – dynamically adjust global tax settings</li>
+    <li>🏦 <strong>Pool Oversight</strong> – monitor and refill liquidity & dev pools</li>
+    <li>🚀 <strong>Controlled Distributions</strong> – allocate tokens</li>
+  </ul>
+  <p className="unauth-paragraph">
+    🚫 Access is restricted to verified <strong>team members</strong> or approved <strong>approvers</strong> only.
+  </p>
+</div>
+
+  <div className="wallet-info-box">
+  <h3 className="wallet-info-title">Connect using popular wallets</h3>
+  <p className="wallet-info-subtitle">FOALCA Admin Dashboard supports:</p>
+  <div className="wallet-icons">
+    <div className="wallet-icon">
+      <img src="/metamask-icon.png" alt="MetaMask" />
+      <span>MetaMask</span>
+    </div>
+    <div className="wallet-icon">
+      <img src="/trustwallet-icon.png" alt="Trust Wallet" />
+      <span>Trust Wallet</span>
+    </div>
+    <div className="wallet-icon">
+      <img src="/coinbase-icon.png" alt="Coinbase Wallet" />
+      <span>Coinbase</span>
+    </div>
+  </div>
+</div>
+
+    <footer className="unauth-footer">
+      &copy; {new Date().getFullYear()} FOALCA Admin Dashboard &mdash; All rights reserved
+    </footer>
+  </div>
+)}
+
+          
+
           {address && !accessDenied && (
             <>
               <div className="dashboard-grid">
